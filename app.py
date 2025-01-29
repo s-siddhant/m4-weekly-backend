@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from preprocessing import preprocess_data 
 from joblib import load
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load the preprocessing pipeline and model
 preprocessing_pipeline = load("preprocessing_pipeline.joblib")
@@ -12,6 +13,15 @@ global_model = load("xgb_model.joblib")
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# Allow requests from Streamlit frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://m4-weekly-frontend.onrender.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Input schema for the /predict endpoint
 class PredictionRequest(BaseModel):
